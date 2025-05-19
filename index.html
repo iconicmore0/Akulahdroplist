@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Airdrop Tracker</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #0f0f0f; color: #fff; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #1e1e1e; }
+    th, td { border: 1px solid #333; padding: 8px; text-align: center; }
+    th { background-color: #222; }
+    input, button { padding: 5px; margin: 5px; }
+    .edit { background: transparent; border: none; color: white; width: 100%; }
+    .add-row, .save-btn, .reset-btn { margin-top: 10px; padding: 8px 12px; }
+  </style>
+</head>
+<body>
+  <h2>Airdrop Testnet Tracker</h2>
+  <button onclick="addRow()" class="add-row">Tambah Baris</button>
+  <button onclick="saveTable()" class="save-btn">Simpan</button>
+  <button onclick="resetTable()" class="reset-btn">Reset Semua</button>
+  <table id="airdropTable">
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Link</th>
+        <th>Join Date</th>
+        <th>Chain</th>
+        <th>Stage</th>
+        <th>Tags</th>
+        <th>Type</th>
+        <th>Cost</th>
+        <th>Hapus</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+<script>
+function loadTable() {
+  const saved = localStorage.getItem("airdropData");
+  if (saved) {
+    document.querySelector("#airdropTable tbody").innerHTML = saved;
+  } else {
+    addRow();
+  }
+}
+
+function addRow() {
+  const table = document.querySelector("#airdropTable tbody");
+  const row = document.createElement("tr");
+  const cols = ["Project", "Link", "Join Date", "Chain", "Stage", "Tags", "Type", "Cost"];
+  cols.forEach(col => {
+    const td = document.createElement("td");
+    td.innerHTML = `<input class='edit' placeholder='${col}'>`;
+    row.appendChild(td);
+  });
+  const tdDelete = document.createElement("td");
+  tdDelete.innerHTML = "<button onclick='deleteRow(this)'>Hapus</button>";
+  row.appendChild(tdDelete);
+  table.appendChild(row);
+}
+
+function deleteRow(btn) {
+  btn.closest("tr").remove();
+  saveTable();
+}
+
+function saveTable() {
+  localStorage.setItem("airdropData", document.querySelector("#airdropTable tbody").innerHTML);
+}
+
+function resetTable() {
+  if (confirm("Yakin ingin menghapus semua data?")) {
+    localStorage.removeItem("airdropData");
+    document.querySelector("#airdropTable tbody").innerHTML = "";
+    addRow();
+  }
+}
+
+window.onload = loadTable;
+</script>
+</body>
+</html>
